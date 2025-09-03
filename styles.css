@@ -1,6 +1,35 @@
 /* --- General Styles --- */
+/* Whitney font family (local only; falls back to Inter/system if unavailable) */
+@font-face {
+            font-family: 'Whitney';
+            src: local('Whitney Book'), local('Whitney');
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+        }
+@font-face {
+            font-family: 'Whitney';
+            src: local('Whitney Medium'), local('Whitney-Medium');
+            font-style: normal;
+            font-weight: 500;
+            font-display: swap;
+        }
+@font-face {
+            font-family: 'Whitney';
+            src: local('Whitney Bold'), local('Whitney-Bold');
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+        }
+@font-face {
+            font-family: 'Whitney';
+            src: local('Whitney Black'), local('Whitney-Black');
+            font-style: normal;
+            font-weight: 900;
+            font-display: swap;
+        }
 body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Whitney', 'Inter', sans-serif;
             background-color: #0f172a; /* slate-900 */
             color: #E5E7EB; /* light-text */
         }
@@ -23,6 +52,18 @@ body {
             --success-green: #4ade80;
             background-color: var(--dark-blue);
         }
+/* Headings mapping per typography spec */
+#dashboardPage h1 { font-weight: 900; }
+#dashboardPage h2 { font-weight: 900; }
+#dashboardPage h3 { font-weight: 700; }
+#dashboardPage h4 { font-weight: 700; }
+
+/* Labels: Whitney Medium, uppercase with ~10% letter spacing */
+#dashboardPage .input-group label {
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
 #dashboardPage .output-value {
             font-size: 2.25rem; /* text-4xl */
             font-weight: 700;
@@ -32,6 +73,12 @@ body {
 #dashboardPage .output-label {
             font-size: 1rem; /* text-base */
             color: var(--medium-text);
+        }
+
+/* Quote block styles per spec (optional, for future use) */
+#dashboardPage blockquote {
+            font-style: italic;
+            font-weight: 500; /* Whitney Medium Italic ideal; fallback italic */
         }
 
 /* --- Common Slider Styles --- */
@@ -101,6 +148,7 @@ input[type="number"]::-webkit-outer-spin-button {
         }
 input[type="number"] {
             -moz-appearance: textfield;
+            appearance: textfield;
         }
 
 /* Prognosis Tool Animations */
