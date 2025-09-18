@@ -65,7 +65,7 @@ body {
             letter-spacing: 0.1em;
         }
 #dashboardPage .output-value {
-            font-size: 2.25rem; /* text-4xl */
+            font-size: 2rem; /* slightly smaller globally in result cards */
             font-weight: 700;
             color: var(--accent-blue-vibrant);
             word-break: break-word;
@@ -73,6 +73,29 @@ body {
 #dashboardPage .output-label {
             font-size: 1rem; /* text-base */
             color: var(--medium-text);
+        }
+
+/* Slightly smaller numbers inside combo result cards to fit nicely */
+#dashboardPage .combo-output .output-value {
+            font-size: 1.5rem; /* smaller to ensure one-line fit */
+            line-height: 2rem;
+            word-break: normal;
+            overflow-wrap: normal;
+            white-space: nowrap; /* avoid line breaks in currency */
+            letter-spacing: 0.5px;
+        }
+
+/* Make combo cards a bit more compact */
+#dashboardPage .combo-output {
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+            justify-content: flex-start !important; /* align numbers on same top line */
+        }
+
+/* Keep number rows aligned across combo cards */
+#dashboardPage .combo-output .output-value {
+            margin-bottom: 0.5rem;
+            min-height: 2rem; /* reserve same height for the number line */
         }
 
 /* Quote block styles per spec (optional, for future use) */
