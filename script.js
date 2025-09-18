@@ -94,12 +94,52 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Removed navigation to prognosis page
                 
+                // Combination buttons handlers
+                const comboButtons = document.querySelectorAll('.combo-btn');
+                if (comboButtons && comboButtons.length > 0) {
+                    comboButtons.forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const percent = parseFloat(e.currentTarget.getAttribute('data-percent'));
+                            this.updateCombination(percent);
+                            // visual selection state
+                            comboButtons.forEach(b => b.classList.remove('bg-[var(--accent-blue-light)]', 'text-slate-900'));
+                            e.currentTarget.classList.add('bg-[var(--accent-blue-light)]', 'text-slate-900');
+                        });
+                    });
+                }
+
                 this.calculatePension();
             },
 
             formatCurrency: (value) => new Intl.NumberFormat('nb-NO', { style: 'currency', currency: 'NOK', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value),
             formatNumber: (value) => new Intl.NumberFormat('nb-NO').format(value),
             formatPercent: (value) => `${value.toFixed(1)} %`,
+
+            // Store last required capital and parameters for combo calculations
+            lastCalc: null,
+            selectedComboPercent: null,
+            updateCombination: function(percent) {
+                const comboSection = document.getElementById('combo-section');
+                if (!comboSection || comboSection.classList.contains('hidden')) return;
+                if (!this.lastCalc) return;
+                const { r, n, requiredCapitalAtRetirement } = this.lastCalc;
+                const p = percent / 100;
+                let lump = 0;
+                let annualSaving = 0;
+                if (r > 0) {
+                    lump = (p * requiredCapitalAtRetirement) / Math.pow(1 + r, n);
+                    annualSaving = ((1 - p) * requiredCapitalAtRetirement) / ((Math.pow(1 + r, n) - 1) / r);
+                } else {
+                    lump = (p * requiredCapitalAtRetirement); // no discounting when r = 0
+                    annualSaving = ((1 - p) * requiredCapitalAtRetirement) / n;
+                }
+                const monthly = annualSaving / 12;
+                const lumpEl = document.getElementById('combo-lump-sum');
+                const monthlyEl = document.getElementById('combo-monthly');
+                if (lumpEl) lumpEl.textContent = this.formatCurrency(lump);
+                if (monthlyEl) monthlyEl.textContent = this.formatCurrency(monthly);
+                this.selectedComboPercent = percent;
+            },
 
             calculatePension: function() {
                 const values = {};
@@ -192,6 +232,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     pensionGapSummary.classList.add('hidden');
                     goalResults.classList.add('hidden');
                     goalExplainer.classList.add('hidden');
+                    const comboSection = document.getElementById('combo-section');
+                    if (comboSection) comboSection.classList.add('hidden');
                 } else {
                     goalMetMessage.classList.add('hidden');
                     pensionGapSummary.classList.remove('hidden');
@@ -215,7 +257,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     const monthlySavingNeeded = annualSavingNeeded / 12;
                     document.getElementById('lump-sum-today').textContent = this.formatCurrency(lumpSumToday);
                     document.getElementById('monthly-saving-needed').textContent = this.formatCurrency(monthlySavingNeeded);
-                    
+                    // expose combo section and save params
+                    const comboSection = document.getElementById('combo-section');
+                    if (comboSection) {
+                        comboSection.classList.remove('hidden');
+                        this.lastCalc = { r, n, requiredCapitalAtRetirement };
+                        if (this.selectedComboPercent != null) this.updateCombination(this.selectedComboPercent);
+                    }
                 }
 
             }
@@ -224,6 +272,5 @@ document.addEventListener('DOMContentLoaded', function() {
         // --- INITIALIZE THE APPLICATION ---
         DashboardApp.init();
     });
-
 
 
