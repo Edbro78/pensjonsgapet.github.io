@@ -96,10 +96,10 @@
                         <div class="flex-1">
                             <button id="disclaimerBtn" class="px-3 py-1.5 text-xs font-medium rounded-full bg-slate-700/70 hover:bg-slate-700 text-slate-200 border border-slate-600/70 shadow-sm transition-colors">Disclaimer/forklaring</button>
                         </div>
-                        <h1 class="text-3xl md:text-4xl font-black text-white text-center flex-1">Pensjon og fremtidig lønn</h1>
+                        <h1 class="text-3xl md:text-4xl font-black text-white text-center whitespace-nowrap leading-tight">Pensjon og fremtidige utbetalinger</h1>
                         <div class="flex-1"></div>
                     </div>
-                    <p class="text-slate-400 text-center mt-2">Estimer dine fremtidige utbetalinger interaktivt</p>
+                    <p class="text-slate-400 text-center mt-2"></p>
                 </header>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -201,6 +201,30 @@
                                     </div>
                                 </div>
                                 <p id="goal-explainer" class="text-center text-sm text-slate-500 mt-4">Beregningen forutsetter at ekstra sparing får samme avkastning som oppgitt.</p>
+
+                                <!-- Combination Solution Section -->
+                                <div id="combo-section" class="hidden mt-8">
+                                    <h3 class="text-xl font-bold text-white mb-3">Kombinasjonsløsning</h3>
+                                    <p class="text-slate-400 text-sm mb-3">Velg andel som engangsinnskudd. Resten blir månedlig sparing.</p>
+                                    <div class="flex flex-nowrap justify-center gap-2 mb-5">
+                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="0">0%</button>
+                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="20">20%</button>
+                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="40">40%</button>
+                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="60">60%</button>
+                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="80">80%</button>
+                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="100">100%</button>
+                                    </div>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
+                                        <div class="bg-slate-900/80 p-6 rounded-lg flex flex-col justify-center combo-output">
+                                            <div id="combo-lump-sum" class="output-value">0 kr</div>
+                                            <div class="output-label mt-2">Engangsinnskudd</div>
+                                        </div>
+                                        <div class="bg-slate-900/80 p-6 rounded-lg flex flex-col justify-center combo-output">
+                                            <div id="combo-monthly" class="output-value">0 kr</div>
+                                            <div class="output-label mt-2">Månedlig sparing </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                              <!-- Navigation Button to Part 2 -->
                             
@@ -760,6 +784,5 @@
     <script src="script.js"></script>
 </body>
 </html>
-
 
 
