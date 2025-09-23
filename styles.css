@@ -1,1 +1,194 @@
+/* --- General Styles --- */
+/* Whitney font family (local only; falls back to Inter/system if unavailable) */
+@font-face {
+            font-family: 'Whitney';
+            src: local('Whitney Book'), local('Whitney');
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+        }
+@font-face {
+            font-family: 'Whitney';
+            src: local('Whitney Medium'), local('Whitney-Medium');
+            font-style: normal;
+            font-weight: 500;
+            font-display: swap;
+        }
+@font-face {
+            font-family: 'Whitney';
+            src: local('Whitney Bold'), local('Whitney-Bold');
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+        }
+@font-face {
+            font-family: 'Whitney';
+            src: local('Whitney Black'), local('Whitney-Black');
+            font-style: normal;
+            font-weight: 900;
+            font-display: swap;
+        }
+body {
+            font-family: 'Whitney', 'Inter', sans-serif;
+            background-color: #0f172a; /* slate-900 */
+            color: #E5E7EB; /* light-text */
+        }
+.page {
+            display: none; /* Pages are hidden by default */
+        }
+.page.active {
+            display: block; /* The active page is shown */
+        }
+
+/* --- Dashboard Specific Styles (Part 1) --- */
+#dashboardPage {
+            --dark-blue: #1A2A47;
+            --accent-blue-light: #60A5FA;
+            --accent-blue-vibrant: #00A9E0;
+            --card-bg: #24385B;
+            --light-text: #E5E7EB;
+            --medium-text: #CBD5E1;
+            --border-color: #364A6E;
+            --success-green: #4ade80;
+            background-color: var(--dark-blue);
+        }
+/* Headings mapping per typography spec */
+#dashboardPage h1 { font-weight: 900; }
+#dashboardPage h2 { font-weight: 900; }
+#dashboardPage h3 { font-weight: 700; }
+#dashboardPage h4 { font-weight: 700; }
+
+/* Labels: Whitney Medium, uppercase with ~10% letter spacing */
+#dashboardPage .input-group label {
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+#dashboardPage .output-value {
+            font-size: 2rem; /* slightly smaller globally in result cards */
+            font-weight: 700;
+            color: var(--accent-blue-vibrant);
+            word-break: break-word;
+        }
+#dashboardPage .output-label {
+            font-size: 1rem; /* text-base */
+            color: var(--medium-text);
+        }
+
+/* Slightly smaller numbers inside combo result cards to fit nicely */
+#dashboardPage .combo-output .output-value {
+            font-size: 1.5rem; /* smaller to ensure one-line fit */
+            line-height: 2rem;
+            word-break: normal;
+            overflow-wrap: normal;
+            white-space: nowrap; /* avoid line breaks in currency */
+            letter-spacing: 0.5px;
+        }
+
+/* Make combo cards a bit more compact */
+#dashboardPage .combo-output {
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+            justify-content: flex-start !important; /* align numbers on same top line */
+        }
+
+/* Keep number rows aligned across combo cards */
+#dashboardPage .combo-output .output-value {
+            margin-bottom: 0.5rem;
+            min-height: 2rem; /* reserve same height for the number line */
+        }
+
+/* Quote block styles per spec (optional, for future use) */
+#dashboardPage blockquote {
+            font-style: italic;
+            font-weight: 500; /* Whitney Medium Italic ideal; fallback italic */
+        }
+
+/* --- Common Slider Styles --- */
+input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            outline: none;
+            transition: background 0.3s, opacity 0.2s;
+        }
+        
+/* Dashboard Slider */
+#dashboardPage input[type="range"] {
+            background: var(--border-color);
+        }
+#dashboardPage input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-blue-light);
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid var(--dark-blue);
+        }
+#dashboardPage input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: var(--accent-blue-light);
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid var(--dark-blue);
+        }
+
+/* Prognosis Tool Slider */
+#prognosisPage input[type="range"] {
+            background: #334155; /* slate-700 */
+            opacity: 0.7;
+        }
+#prognosisPage input[type="range"]:hover {
+            opacity: 1;
+        }
+#prognosisPage input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #2563eb; /* blue-600 */
+            cursor: pointer;
+            border-radius: 50%;
+        }
+#prognosisPage input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #2563eb; /* blue-600 */
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+/* Common Number Input Style */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+/* Prognosis Tool Animations */
+.panel-enter {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+.panel-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+/* Modal fine-tuning (keep Tailwind classes primary) */
+#disclaimerModal .space-y-6 p {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
 
