@@ -44,9 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 { id: 'otpRate', label: 'OTP-sats', type: 'range', min: 2, max: 7, step: 0.1, value: 5, unit: '%' },
                 { id: 'currentIPSBalance', label: 'IPS Saldo i dag', type: 'range', min: 0, max: 1000000, step: 10000, value: 0, unit: 'kr' },
                 { id: 'ipsAnnualSaving', label: 'Årlig sparing IPS', type: 'range', min: 0, max: 40000, step: 1000, value: 0, unit: 'kr' },
+                { id: 'annualFripoliserPayout', label: 'Årlig utbetaling fra Fripoliser', type: 'range', min: 0, max: 500000, step: 5000, value: 0, unit: 'kr' },
                 { id: 'expectedReturn', label: 'Forventet årlig avkastning', type: 'range', min: 3, max: 10, step: 0.1, value: 8.0, unit: '%' },
                 { id: 'payoutYears', label: 'Utbetalingsperiode OTP', type: 'range', min: 10, max: 20, step: 1, value: 15, unit: 'år' },
-                { id: 'cpiRate', label: 'Forventet årlig KPI', type: 'range', min: 0, max: 10, step: 0.1, value: 2.5, unit: '%' },
+                { id: 'cpiRate', label: 'Forventet årlig KPI', type: 'range', min: 0, max: 10, step: 0.1, value: 3, unit: '%' },
                 { id: 'socialSecurityEstimate', label: 'Årlig utbetaling Folketrygden', type: 'range', min: 150000, max: 500000, step: 5000, value: 250000, unit: 'kr' },
                 { id: 'desiredPensionLevel', label: 'Ønsket pensjonsnivå', type: 'range', min: 40, max: 100, step: 1, value: 80, unit: '%' }
             ],
@@ -93,6 +94,58 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 
                 // Removed navigation to prognosis page
+                
+                // Relocate selected sliders under combo boxes to save space on the left
+                const comboSlidersContainer = document.getElementById('combo-sliders-container');
+                if (comboSlidersContainer) {
+                    ['desiredPensionLevel', 'cpiRate'].forEach((moveId) => {
+                        const inputEl = document.getElementById(moveId);
+                        if (inputEl) {
+                            const group = inputEl.closest('.input-group');
+                            if (group) comboSlidersContainer.appendChild(group);
+                        }
+                    });
+                    // Transform the two relocated sliders into fixed option button groups
+                    const transformToChoices = (id, options, defaultValue) => {
+                        const input = document.getElementById(id);
+                        if (!input) return;
+                        const wrapper = input.closest('.input-group');
+                        const valueSpan = wrapper ? wrapper.querySelector(`#${id}-value`) : null;
+                        const headerRow = wrapper ? wrapper.firstElementChild : null; // label row
+                        if (headerRow) headerRow.className = 'mb-2';
+                        if (valueSpan) valueSpan.classList.add('hidden');
+                        // hide the slider input but keep it for value/state and events
+                        input.classList.add('hidden');
+                        // build buttons
+                        const btnRow = document.createElement('div');
+                        btnRow.className = 'grid grid-cols-6 gap-3';
+                        options.forEach((val) => {
+                            const btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'choice-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition';
+                            btn.textContent = `${val}%`;
+                            btn.addEventListener('click', () => {
+                                input.value = val;
+                                // visual state
+                                btnRow.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('bg-[var(--accent-blue-light)]', 'text-slate-900'));
+                                btn.classList.add('bg-[var(--accent-blue-light)]', 'text-slate-900');
+                                // update label value immediately
+                                if (valueSpan) valueSpan.textContent = `${val} %`;
+                                // trigger recalculation
+                                input.dispatchEvent(new Event('input', { bubbles: true }));
+                            });
+                            btnRow.appendChild(btn);
+                        });
+                        if (wrapper) wrapper.appendChild(btnRow);
+                        // set default
+                        const defaultBtn = Array.from(btnRow.children).find(b => b.textContent === `${defaultValue}%`);
+                        if (defaultBtn) defaultBtn.click();
+                    };
+                    // Desired pension: 0,20,40,60,80,100 with default 80
+                    transformToChoices('desiredPensionLevel', [0, 20, 40, 60, 80, 100], 80);
+                    // KPI: 0–5 with default 3
+                    transformToChoices('cpiRate', [0, 1, 2, 3, 4, 5], 3);
+                }
                 
                 // Combination buttons handlers
                 const comboButtons = document.querySelectorAll('.combo-btn');
@@ -202,7 +255,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 if (isNaN(annualIPSPayout)) annualIPSPayout = 0;
 
-                const totalAnnualPension = futureSocialSecurity + annualOTPPayout + annualIPSPayout;
+                // Fripoliser: add directly to annual pension without return or CPI adjustments
+                const fripoliserPayout = values.annualFripoliserPayout || 0;
+                const totalAnnualPension = futureSocialSecurity + annualOTPPayout + annualIPSPayout + fripoliserPayout;
                 const pensionPercentage = futureSalary > 0 ? (totalAnnualPension / futureSalary) * 100 : 0;
                 
                 document.getElementById('years-to-retirement').textContent = this.formatNumber(n);
@@ -217,6 +272,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (annualIpsSavingEl) annualIpsSavingEl.textContent = this.formatCurrency(ipsAnnual);
                 if (futureIpsBalanceEl) futureIpsBalanceEl.textContent = this.formatCurrency(futureIPSSaldo);
                 if (annualIpsPayoutEl) annualIpsPayoutEl.textContent = this.formatCurrency(annualIPSPayout);
+                const fripEl = document.getElementById('annual-fripoliser-payout');
+                if (fripEl) fripEl.textContent = this.formatCurrency(fripoliserPayout);
                 document.getElementById('total-annual-pension').textContent = this.formatCurrency(totalAnnualPension);
                 document.getElementById('pension-percentage').textContent = this.formatPercent(pensionPercentage);
 
