@@ -169,6 +169,10 @@
                                 </div>
                                 <hr class="border-[var(--border-color)]">
                                 <div class="flex justify-between items-center text-slate-300">
+                                    <span>Årlig utbetaling fra Fripoliser:</span>
+                                    <span id="annual-fripoliser-payout" class="font-semibold text-white">0 kr</span>
+                                </div>
+                                <div class="flex justify-between items-center text-slate-300">
                                     <span>Årlig utbetaling fra Folketrygden:</span>
                                     <span id="future-social-security" class="font-semibold text-white">0 kr</span>
                                 </div>
@@ -206,13 +210,13 @@
                                 <div id="combo-section" class="hidden mt-8">
                                     <h3 class="text-xl font-bold text-white mb-3">Kombinasjonsløsning</h3>
                                     <p class="text-slate-400 text-sm mb-3">Velg andel som engangsinnskudd. Resten blir månedlig sparing.</p>
-                                    <div class="flex flex-nowrap justify-center gap-2 mb-5">
-                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="0">0%</button>
-                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="20">20%</button>
-                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="40">40%</button>
-                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="60">60%</button>
-                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="80">80%</button>
-                                        <button class="combo-btn px-2.5 py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="100">100%</button>
+                                    <div class="grid grid-cols-6 gap-3 mb-5">
+                                        <button class="combo-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="0">0%</button>
+                                        <button class="combo-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="20">20%</button>
+                                        <button class="combo-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="40">40%</button>
+                                        <button class="combo-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="60">60%</button>
+                                        <button class="combo-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="80">80%</button>
+                                        <button class="combo-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="100">100%</button>
                                     </div>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center">
                                         <div class="bg-slate-900/80 p-6 rounded-lg flex flex-col justify-center combo-output">
@@ -226,6 +230,8 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Sliders relocated under boxes: Ønsket pensjonsnivå og Forventet årlig KPI (always visible) -->
+                            <div id="combo-sliders-container" class="mt-4 grid grid-cols-1 gap-6"></div>
                              <!-- Navigation Button to Part 2 -->
                             
                         </div>
