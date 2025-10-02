@@ -56,9 +56,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 const inputContainer = document.getElementById('input-container');
                 if (inputContainer.childElementCount > 0) return; // Prevent re-initialization
                 
+                // IDs of fields to hide/show with toggle button (excluding currentOTPSaldo itself)
+                const toggleableFieldIds = ['otpRate', 'currentIPSBalance', 'ipsAnnualSaving', 'annualFripoliserPayout', 'expectedReturn', 'payoutYears', 'socialSecurityEstimate'];
+                
                 this.inputsConfig.forEach(config => {
                     const wrapper = document.createElement('div');
                     wrapper.className = 'input-group';
+                    
+                    // Mark toggleable fields
+                    if (toggleableFieldIds.includes(config.id)) {
+                        wrapper.classList.add('toggleable-input');
+                    }
+                    
                     const label = document.createElement('label');
                     label.htmlFor = config.id;
                     label.className = 'text-sm font-medium text-slate-300';
@@ -74,6 +83,41 @@ document.addEventListener('DOMContentLoaded', function() {
                         const valueSpan = document.createElement('span');
                         valueSpan.id = `${config.id}-value`;
                         valueSpan.className = 'text-base font-semibold text-[var(--accent-blue-light)]';
+                        
+                        // Add toggle button to the left of label for OTP Saldo field
+                        if (config.id === 'currentOTPSaldo') {
+                            const toggleBtn = document.createElement('button');
+                            toggleBtn.id = 'toggleInputsBtn';
+                            toggleBtn.className = 'text-slate-400 hover:text-white transition-colors p-1 rounded-lg hover:bg-slate-700/50 mr-2';
+                            toggleBtn.setAttribute('aria-label', 'Vis/skjul inputs');
+                            toggleBtn.setAttribute('type', 'button');
+                            toggleBtn.innerHTML = `
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+                                    <path d="M12 15a3 3 0 100-6 3 3 0 000 6z" />
+                                    <path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 010-1.113zM17.25 12a5.25 5.25 0 11-10.5 0 5.25 5.25 0 0110.5 0z" clip-rule="evenodd" />
+                                </svg>
+                            `;
+                            
+                            // Create a container for all content (label, value, slider) that can be toggled
+                            const otpContent = document.createElement('div');
+                            otpContent.className = 'toggleable-otp-content';
+                            
+                            labelWrapper.appendChild(label);
+                            labelWrapper.appendChild(valueSpan);
+                            otpContent.appendChild(labelWrapper);
+                            
+                            input.className = 'w-full';
+                            input.min = config.min;
+                            input.max = config.max;
+                            input.step = config.step;
+                            otpContent.appendChild(input);
+                            
+                            wrapper.appendChild(toggleBtn);
+                            wrapper.appendChild(otpContent);
+                            inputContainer.appendChild(wrapper);
+                            return; // Skip the normal append logic
+                        }
+                        
                         labelWrapper.appendChild(label);
                         labelWrapper.appendChild(valueSpan);
                         wrapper.appendChild(labelWrapper);
@@ -328,6 +372,42 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // --- INITIALIZE THE APPLICATION ---
         DashboardApp.init();
+        
+        // --- TOGGLE INPUT VISIBILITY ---
+        const toggleInputsBtn = document.getElementById('toggleInputsBtn');
+        if (toggleInputsBtn) {
+            toggleInputsBtn.addEventListener('click', () => {
+                // Toggle OTP Saldo input slider
+                const otpContent = document.querySelector('.toggleable-otp-content');
+                if (otpContent) {
+                    otpContent.classList.toggle('visibility-hidden');
+                }
+                
+                // Toggle all other fields
+                const toggleableInputs = document.querySelectorAll('.toggleable-input');
+                toggleableInputs.forEach(input => {
+                    input.classList.toggle('visibility-hidden');
+                });
+            });
+        }
+        
+        // --- TOGGLE DETAILED VIEW ---
+        const toggleDetailedViewBtn = document.getElementById('toggleDetailedViewBtn');
+        const detailedViewContent = document.getElementById('detailedViewContent');
+        if (toggleDetailedViewBtn && detailedViewContent) {
+            toggleDetailedViewBtn.addEventListener('click', () => {
+                detailedViewContent.classList.toggle('visibility-hidden');
+            });
+        }
+        
+        // --- TOGGLE PENSION GAP ---
+        const togglePensionGapBtn = document.getElementById('togglePensionGapBtn');
+        const pensionGapContent = document.getElementById('pensionGapContent');
+        if (togglePensionGapBtn && pensionGapContent) {
+            togglePensionGapBtn.addEventListener('click', () => {
+                pensionGapContent.classList.toggle('visibility-hidden');
+            });
+        }
     });
 
 
