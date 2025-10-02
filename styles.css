@@ -191,4 +191,10 @@ input[type="number"] {
             margin-bottom: 0;
         }
 
+/* Toggle visibility while preserving layout space */
+.visibility-hidden {
+            visibility: hidden !important;
+            opacity: 0 !important;
+            transition: opacity 0.2s ease-in-out;
+        }
 
