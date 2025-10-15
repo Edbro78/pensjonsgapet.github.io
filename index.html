@@ -87,6 +87,28 @@
         </div>
     </div>
 
+    <!-- Output Modal -->
+    <div id="outputModal" class="fixed inset-0 z-[60] hidden items-start justify-center p-4 md:p-8">
+        <div class="absolute inset-0 bg-black/60" data-close="true"></div>
+        <div class="relative w-full max-w-2xl mx-auto rounded-xl bg-white text-slate-900 p-6 md:p-8 shadow-xl">
+            <button id="outputClose" class="absolute top-3 right-3 text-slate-500 hover:text-slate-700" aria-label="Lukk">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 11-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd"/></svg>
+            </button>
+            <h2 class="text-2xl font-bold mb-6">Output</h2>
+            <div class="space-y-4">
+                <div class="relative">
+                    <textarea id="outputTextArea" class="w-full h-64 p-4 pr-16 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Klikk på Output-knappen for å se alle verdier..."></textarea>
+                    <button id="copyButton" class="absolute bottom-3 right-3 px-3 py-1.5 text-xs font-medium rounded-md bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition-colors flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3">
+                            <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
+                        </svg>
+                        Kopier
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- =========== PAGE 1: PENSION DASHBOARD =========== -->
     <div id="dashboardPage" class="page active">
         <div class="relative min-h-screen flex flex-col items-center justify-center p-4 lg:p-8">
@@ -228,7 +250,12 @@
                                         <h3 class="text-xl font-bold text-white mb-3">Kombinasjonsløsning</h3>
                                         <p class="text-slate-400 text-sm mb-3">Velg andel som engangsinnskudd. Resten blir månedlig sparing.</p>
                                         <div class="grid grid-cols-6 gap-3 mb-5">
-                                            <button class="combo-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="0">0%</button>
+                                            <div class="relative">
+                                                <input type="number" id="customComboPercent" class="w-full py-1 text-sm rounded-full bg-slate-700 text-white border border-slate-600 text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="" min="0" max="100" step="1" value="">
+                                                <div class="absolute inset-0 pointer-events-none flex items-center justify-center">
+                                                    <span class="text-xs text-slate-400">%</span>
+                                                </div>
+                                            </div>
                                             <button class="combo-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="20">20%</button>
                                             <button class="combo-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="40">40%</button>
                                             <button class="combo-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition" data-percent="60">60%</button>
@@ -256,6 +283,9 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Output Button - Fixed position in bottom right corner -->
+            <button id="outputBtn" class="fixed bottom-6 right-6 px-3 py-1.5 text-xs font-medium rounded-full bg-slate-700/70 hover:bg-slate-700 text-slate-200 border border-slate-600/70 shadow-sm transition-colors z-50">Output</button>
         </div>
     </div>
 
