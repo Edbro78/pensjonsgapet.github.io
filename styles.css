@@ -198,3 +198,80 @@ input[type="number"] {
             transition: opacity 0.2s ease-in-out;
         }
 
+/* Output Modal Textarea Styling */
+#outputTextArea {
+            font-family: 'Whitney', 'Inter', sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            background-color: #f8fafc;
+            border: 2px solid #e2e8f0;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+#outputTextArea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+#outputTextArea::placeholder {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+/* Copy Button Styling */
+#copyButton {
+            font-family: 'Whitney', 'Inter', sans-serif;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+        }
+#copyButton:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+#copyButton:active {
+            transform: translateY(0);
+        }
+
+/* Custom Combo Input Styling */
+#customComboPercent {
+            font-family: 'Whitney', 'Inter', sans-serif;
+            font-weight: 500;
+            text-align: center;
+            padding-right: 1.5rem;
+        }
+#customComboPercent::-webkit-outer-spin-button,
+#customComboPercent::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+#customComboPercent[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+#customComboPercent:focus {
+            outline: none;
+            border-color: var(--accent-blue-light);
+            box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+        }
+
+/* Custom Desired Pension Level Input Styling */
+#customDesiredPensionLevel {
+            font-family: 'Whitney', 'Inter', sans-serif;
+            font-weight: 500;
+            text-align: center;
+            padding-right: 1.5rem;
+        }
+#customDesiredPensionLevel::-webkit-outer-spin-button,
+#customDesiredPensionLevel::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+#customDesiredPensionLevel[type=number] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+#customDesiredPensionLevel:focus {
+            outline: none;
+            border-color: var(--accent-blue-light);
+            box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+        }
+
