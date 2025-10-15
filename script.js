@@ -28,6 +28,166 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        // Output modal wiring
+        const outputBtn = document.getElementById('outputBtn');
+        const outputModal = document.getElementById('outputModal');
+        const outputClose = document.getElementById('outputClose');
+        const outputTextArea = document.getElementById('outputTextArea');
+        const copyButton = document.getElementById('copyButton');
+        
+        const generateOutputText = () => {
+            let outputText = '';
+            
+            // Input fields (16 stk)
+            const inputLabels = {
+                'age': 'Din alder',
+                'retirementAge': 'Pensjonsalder', 
+                'currentSalary': 'Dagens årslønn',
+                'currentOTPSaldo': 'OTP Saldo i dag',
+                'otpRate': 'OTP-sats',
+                'currentIPSBalance': 'IPS saldo i dag',
+                'ipsAnnualSaving': 'Årlig sparing IPS',
+                'annualFripoliserPayout': 'Årlig utbetaling fra fripoliser',
+                'expectedReturn': 'Forventet årlig avkastning',
+                'payoutYears': 'Utbetalingsperiode OTP',
+                'socialSecurityEstimate': 'Årlig utbetaling fra folketrygden',
+                'desiredPensionLevel': 'Ønsket pensjonsnivå',
+                'cpiRate': 'Forventet årlig KPI'
+            };
+            
+            outputText += 'INPUTFELTER:\n';
+            outputText += '================\n\n';
+            
+            // Add input values
+            Object.keys(inputLabels).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    const value = element.value;
+                    const label = inputLabels[id];
+                    let displayValue = value;
+                    
+                    // Format based on field type
+                    if (id === 'age' || id === 'retirementAge') {
+                        displayValue = `${value} år`;
+                    } else if (id === 'currentSalary' || id === 'currentOTPSaldo' || id === 'currentIPSBalance' || id === 'ipsAnnualSaving' || id === 'annualFripoliserPayout' || id === 'socialSecurityEstimate') {
+                        displayValue = `${parseFloat(value).toLocaleString('nb-NO')} kr`;
+                    } else if (id === 'otpRate' || id === 'expectedReturn' || id === 'desiredPensionLevel' || id === 'cpiRate') {
+                        displayValue = `${parseFloat(value).toFixed(1)} %`;
+                    } else if (id === 'payoutYears') {
+                        displayValue = `${value} år`;
+                    }
+                    
+                    outputText += `${label}: ${displayValue}\n`;
+                }
+            });
+            
+            // Add combination solution values
+            const comboLumpSum = document.getElementById('combo-lump-sum');
+            const comboMonthly = document.getElementById('combo-monthly');
+            const customComboInput = document.getElementById('customComboPercent');
+            if (comboLumpSum && comboMonthly) {
+                let comboPercent = '';
+                if (customComboInput && customComboInput.value) {
+                    comboPercent = ` (${customComboInput.value}%)`;
+                } else {
+                    // Check which button is selected
+                    const selectedButton = document.querySelector('.combo-btn.bg-\\[var\\(--accent-blue-light\\)\\]');
+                    if (selectedButton) {
+                        comboPercent = ` (${selectedButton.getAttribute('data-percent')}%)`;
+                    }
+                }
+                outputText += `Kombinasjonsløsning - Engangsinnskudd${comboPercent}: ${comboLumpSum.textContent}\n`;
+                outputText += `Kombinasjonsløsning - Månedlig sparing${comboPercent}: ${comboMonthly.textContent}\n`;
+            }
+            
+            outputText += '\n\nRESULTATER:\n';
+            outputText += '===========\n\n';
+            
+            // Results (4 stk)
+            const totalAnnualPension = document.getElementById('total-annual-pension');
+            const pensionPercentage = document.getElementById('pension-percentage');
+            const lumpSumToday = document.getElementById('lump-sum-today');
+            const monthlySavingNeeded = document.getElementById('monthly-saving-needed');
+            
+            if (totalAnnualPension) {
+                outputText += `Årlig pensjon (estimat): ${totalAnnualPension.textContent}\n`;
+            }
+            if (pensionPercentage) {
+                outputText += `% av sluttlønn: ${pensionPercentage.textContent}\n`;
+            }
+            if (lumpSumToday) {
+                outputText += `Nødvendig engangsinnskudd i dag: ${lumpSumToday.textContent}\n`;
+            }
+            if (monthlySavingNeeded) {
+                outputText += `Alternativ månedlig sparing: ${monthlySavingNeeded.textContent}\n`;
+            }
+            
+            return outputText;
+        };
+        
+        const openOutput = () => {
+            if (!outputModal) return;
+            
+            // Generate and populate the text
+            const outputText = generateOutputText();
+            if (outputTextArea) {
+                outputTextArea.value = outputText;
+            }
+            
+            outputModal.classList.remove('hidden');
+            outputModal.classList.add('flex');
+        };
+        const closeOutput = () => {
+            if (!outputModal) return;
+            outputModal.classList.add('hidden');
+            outputModal.classList.remove('flex');
+        };
+        // Copy functionality
+        const copyToClipboard = async () => {
+            if (!outputTextArea) return;
+            
+            try {
+                await navigator.clipboard.writeText(outputTextArea.value);
+                
+                // Visual feedback
+                const originalText = copyButton.innerHTML;
+                copyButton.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-3 h-3">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    Kopiert!
+                `;
+                copyButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                copyButton.classList.add('bg-green-600', 'hover:bg-green-700');
+                
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    copyButton.innerHTML = originalText;
+                    copyButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    copyButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                }, 2000);
+                
+            } catch (err) {
+                console.error('Failed to copy text: ', err);
+                // Fallback for older browsers
+                outputTextArea.select();
+                document.execCommand('copy');
+            }
+        };
+        
+        if (outputBtn) outputBtn.addEventListener('click', openOutput);
+        if (outputClose) outputClose.addEventListener('click', closeOutput);
+        if (copyButton) copyButton.addEventListener('click', copyToClipboard);
+        if (outputModal) {
+            outputModal.addEventListener('click', (e) => {
+                const target = e.target;
+                if (target && target.getAttribute('data-close') === 'true') closeOutput();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeOutput();
+            });
+        }
+
         // No multi-page navigation or shared data needed
 
 
@@ -163,23 +323,86 @@ document.addEventListener('DOMContentLoaded', function() {
                         // build buttons
                         const btnRow = document.createElement('div');
                         btnRow.className = 'grid grid-cols-6 gap-3';
-                        options.forEach((val) => {
-                            const btn = document.createElement('button');
-                            btn.type = 'button';
-                            btn.className = 'choice-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition';
-                            btn.textContent = `${val}%`;
-                            btn.addEventListener('click', () => {
-                                input.value = val;
-                                // visual state
-                                btnRow.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('bg-[var(--accent-blue-light)]', 'text-slate-900'));
-                                btn.classList.add('bg-[var(--accent-blue-light)]', 'text-slate-900');
-                                // update label value immediately
-                                if (valueSpan) valueSpan.textContent = `${val} %`;
-                                // trigger recalculation
-                                input.dispatchEvent(new Event('input', { bubbles: true }));
+                        
+                        // Special handling for desiredPensionLevel - replace 0% with custom input
+                        if (id === 'desiredPensionLevel') {
+                            // Create custom input for first position
+                            const customInputDiv = document.createElement('div');
+                            customInputDiv.className = 'relative';
+                            const customInput = document.createElement('input');
+                            customInput.type = 'number';
+                            customInput.id = 'customDesiredPensionLevel';
+                            customInput.className = 'w-full py-1 text-sm rounded-full bg-slate-700 text-white border border-slate-600 text-center focus:ring-2 focus:ring-blue-500 focus:border-blue-500';
+                            customInput.placeholder = '';
+                            customInput.min = '0';
+                            customInput.max = '100';
+                            customInput.step = '1';
+                            customInput.value = '';
+                            
+                            // Add % symbol overlay
+                            const percentSymbol = document.createElement('div');
+                            percentSymbol.className = 'absolute inset-0 pointer-events-none flex items-center justify-center';
+                            percentSymbol.innerHTML = '<span class="text-xs text-slate-400">%</span>';
+                            
+                            customInputDiv.appendChild(customInput);
+                            customInputDiv.appendChild(percentSymbol);
+                            btnRow.appendChild(customInputDiv);
+                            
+                            // Add event listener for custom input
+                            customInput.addEventListener('input', (e) => {
+                                const value = parseFloat(e.target.value);
+                                if (!isNaN(value) && value >= 0 && value <= 100) {
+                                    input.value = value;
+                                    // Clear button selections when custom input is used
+                                    btnRow.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('bg-[var(--accent-blue-light)]', 'text-slate-900'));
+                                    // update label value immediately
+                                    if (valueSpan) valueSpan.textContent = `${value} %`;
+                                    // trigger recalculation
+                                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                                }
                             });
-                            btnRow.appendChild(btn);
-                        });
+                            
+                            // Skip the first option (0) and create buttons for the rest
+                            options.slice(1).forEach((val) => {
+                                const btn = document.createElement('button');
+                                btn.type = 'button';
+                                btn.className = 'choice-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition';
+                                btn.textContent = `${val}%`;
+                                btn.addEventListener('click', () => {
+                                    input.value = val;
+                                    // visual state
+                                    btnRow.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('bg-[var(--accent-blue-light)]', 'text-slate-900'));
+                                    btn.classList.add('bg-[var(--accent-blue-light)]', 'text-slate-900');
+                                    // Clear custom input when button is selected
+                                    customInput.value = '';
+                                    // update label value immediately
+                                    if (valueSpan) valueSpan.textContent = `${val} %`;
+                                    // trigger recalculation
+                                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                                });
+                                btnRow.appendChild(btn);
+                            });
+                        } else {
+                            // Original behavior for other fields
+                            options.forEach((val) => {
+                                const btn = document.createElement('button');
+                                btn.type = 'button';
+                                btn.className = 'choice-btn w-full py-1 text-sm rounded-full bg-slate-700 text-white hover:bg-slate-600 transition';
+                                btn.textContent = `${val}%`;
+                                btn.addEventListener('click', () => {
+                                    input.value = val;
+                                    // visual state
+                                    btnRow.querySelectorAll('.choice-btn').forEach(b => b.classList.remove('bg-[var(--accent-blue-light)]', 'text-slate-900'));
+                                    btn.classList.add('bg-[var(--accent-blue-light)]', 'text-slate-900');
+                                    // update label value immediately
+                                    if (valueSpan) valueSpan.textContent = `${val} %`;
+                                    // trigger recalculation
+                                    input.dispatchEvent(new Event('input', { bubbles: true }));
+                                });
+                                btnRow.appendChild(btn);
+                            });
+                        }
+                        
                         if (wrapper) wrapper.appendChild(btnRow);
                         // set default
                         const defaultBtn = Array.from(btnRow.children).find(b => b.textContent === `${defaultValue}%`);
@@ -201,7 +424,23 @@ document.addEventListener('DOMContentLoaded', function() {
                             // visual selection state
                             comboButtons.forEach(b => b.classList.remove('bg-[var(--accent-blue-light)]', 'text-slate-900'));
                             e.currentTarget.classList.add('bg-[var(--accent-blue-light)]', 'text-slate-900');
+                            // Clear custom input when button is selected
+                            const customInput = document.getElementById('customComboPercent');
+                            if (customInput) customInput.value = '';
                         });
+                    });
+                }
+                
+                // Custom input handler
+                const customComboInput = document.getElementById('customComboPercent');
+                if (customComboInput) {
+                    customComboInput.addEventListener('input', (e) => {
+                        const value = parseFloat(e.target.value);
+                        if (!isNaN(value) && value >= 0 && value <= 100) {
+                            this.updateCombination(value);
+                            // Clear button selections when custom input is used
+                            comboButtons.forEach(b => b.classList.remove('bg-[var(--accent-blue-light)]', 'text-slate-900'));
+                        }
                     });
                 }
 
