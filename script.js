@@ -45,6 +45,41 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         };
         
+        // Function to apply light mode styles to buttons
+        const applyLightModeStyles = () => {
+            // Apply styles to choice buttons
+            document.querySelectorAll('.choice-btn').forEach(btn => {
+                // Check if button is selected
+                const isSelected = btn.classList.contains('bg-[var(--accent-blue-light)]') || 
+                                   btn.classList.contains('bg-blue-600') ||
+                                   btn.hasAttribute('data-selected') ||
+                                   btn.classList.contains('choice-btn-selected');
+                
+                if (isSelected) {
+                    btn.style.setProperty('background-color', '#3B7EE3', 'important');
+                    btn.style.setProperty('color', '#ffffff', 'important');
+                } else {
+                    btn.style.setProperty('background-color', '#84AEED', 'important');
+                    btn.style.setProperty('color', '#ffffff', 'important');
+                }
+            });
+            
+            // Apply styles to combo buttons
+            document.querySelectorAll('.combo-btn').forEach(btn => {
+                // Check if button is selected
+                const isSelected = btn.classList.contains('bg-[var(--accent-blue-light)]') || 
+                                   btn.classList.contains('bg-blue-600');
+                
+                if (isSelected) {
+                    btn.style.setProperty('background-color', '#3B7EE3', 'important');
+                    btn.style.setProperty('color', '#111827', 'important');
+                } else {
+                    btn.style.setProperty('background-color', '#84AEED', 'important');
+                    btn.style.setProperty('color', '#111827', 'important');
+                }
+            });
+        };
+        
         // Toggle theme on button click
         if (themeToggle) {
             themeToggle.addEventListener('click', () => {
@@ -59,6 +94,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 // If switching to dark mode, remove all inline styles
                 if (!isLight) {
                     removeLightModeStyles();
+                } else {
+                    // If switching to light mode, apply light mode styles
+                    applyLightModeStyles();
                 }
                 
                 // Update disclaimer button color
@@ -68,6 +106,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Initialize disclaimer button color
         updateDisclaimerButton();
+        
+        // Apply light mode styles if starting in light mode
+        if (document.documentElement.classList.contains('theme-light')) {
+            // Wait a bit for DOM to be ready
+            setTimeout(() => {
+                applyLightModeStyles();
+            }, 100);
+        }
 
         // --- GLOBAL APP STATE ---
 
