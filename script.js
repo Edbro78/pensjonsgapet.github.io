@@ -4,14 +4,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
         
-        // Initialize theme from localStorage or default to dark
-        const savedTheme = localStorage.getItem('theme') || 'dark';
+        // Initialize theme from localStorage - default is always dark mode
+        // Only apply light mode if explicitly saved as 'light' in localStorage
+        const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') {
+            // Light mode is an active choice, apply it
             document.documentElement.classList.add('theme-light');
             if (themeIcon) themeIcon.textContent = '☾';
         } else {
+            // Default to dark mode (if savedTheme is null, undefined, 'dark', or anything else)
             document.documentElement.classList.remove('theme-light');
             if (themeIcon) themeIcon.textContent = '☀︎';
+            // Ensure localStorage is set to 'dark' if it was empty
+            if (!savedTheme) {
+                localStorage.setItem('theme', 'dark');
+            }
         }
         
         // Function to update disclaimer button color
